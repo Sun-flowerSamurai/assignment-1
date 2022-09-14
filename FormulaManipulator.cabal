@@ -1,13 +1,13 @@
-cabal-version:        3.4
+cabal-version:        3.0
 name:                 FormulaManipulator
-version:              0.0.0.1
+version:              0.1.0.0
 author:               Huub de Beer
 maintainer:           h.t.d.beer@tue.nl
 extra-source-files:   README.md
 
 executable formulator
     main-is:          Main.hs
-    build-depends:    base ^>=4.15.0.0,
+    build-depends:    base ^>=4.14.3.0,
                       FormulaManipulator,
     hs-source-dirs:   app
     default-language: Haskell2010
@@ -16,7 +16,7 @@ library
     exposed-modules:  FormulaManipulator,
                       ExprLanguage,
                       FormulatorCLI
-    build-depends:    base ^>=4.15.0.0,
+    build-depends:    base ^>=4.14.3.0,
                       parsec,
                       split
     hs-source-dirs:   src
@@ -29,7 +29,7 @@ test-suite FormulatManipulator-test
     hs-source-dirs:   test
     main-is:          Spec.hs
     build-depends:    
-                      base ^>=4.15.0.0,
+                      base ^>=4.14.3.0,
                       hspec,
                       QuickCheck,
                       FormulaManipulator,

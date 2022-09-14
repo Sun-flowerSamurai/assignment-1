@@ -15,21 +15,17 @@ documentation explaining how to use this module.
 
 **Tip** Run `cabal haddock` to generate nice HTML formatted documentation.
 
-**Note** The `Expr` type in this assignment is **different** from the
-expression tree type you have seen in Chapter 8 of *Learn Haskell*, [Expression
-Trees](http://learn.hfm.io/expressions.html). 
-
 ## Assignment
 
-This assignment consists of six programming
-exercises. In the end you should have a working program with a command-line
-interface as specified in Exercise 6.
+This assignment consists of six programming exercises. In the end you should
+have a working program with a command-line interface as specified in Exercise
+6.
 
-In the six programming exercises you do not have
-to calculate a definition nor give a definition in mathematical notation.
-However, you have to explicitly add a type declaration to every function you
-define in Haskell. As part of these six programming exercises, you also have
-to write tests in [`test/Spec.hs`](test/Spec.hs).
+In the six programming exercises you do not have to calculate a definition nor
+give a definition in mathematical notation.  However, you have to explicitly
+add a type declaration to every function you define in Haskell. As part of
+these six programming exercises, you also have to write tests in
+[`test/Spec.hs`](test/Spec.hs).
 
 ### Split over two weeks
 
@@ -48,7 +44,8 @@ we run this assignment in two parts.
   Of course, you can continue with exercises 3 through 6 already in the first
   week.
 
-- In the second week, you finish the complete assignment. You submit your whole project.
+- In the second week, you finish the complete assignment. You submit your
+  whole project.
 
 ### Grading
 
@@ -62,7 +59,8 @@ We grade you on exercises 3- 6 based on your submission in the second week.
     files to or remove files from this project, nor change any file names. All
     you have to do is changing the contents of
     [`src/FormulaManipulator.hs`](src/FormulaManipulator.hs),
-    [`src/FormulatorCLI.hs`](src/FormulatorCLI.hs), and [`test/Spec.hs`](test/Spec.hs).
+    [`src/FormulatorCLI.hs`](src/FormulatorCLI.hs), and
+    [`test/Spec.hs`](test/Spec.hs).
 
 2.  Verify that the project works by running `cabal test`. All tests pass.
 
@@ -75,14 +73,15 @@ We grade you on exercises 3- 6 based on your submission in the second week.
 
 4.  In completing this assignment, you deliver three files:
 
-    * The Haskell file [`src/FormulaManipulator.hs`](src/FormulaManipulator) for
-      exercises 1 through 5;
-    * The Haskell file [`src/FormulatorCLI.hs`](src/FormulatorCLI.hs) for exercise 6;
-    * The Haskell file [`test/Spec.hs`](test/Spec.hs) for exercises 1 through 6;
-      and
+    * The Haskell file [`src/FormulaManipulator.hs`](src/FormulaManipulator)
+      for exercises 1 through 5;
+    * The Haskell file [`src/FormulatorCLI.hs`](src/FormulatorCLI.hs) for
+      exercise 6;
+    * The Haskell file [`test/Spec.hs`](test/Spec.hs) for exercises 1 through
+      6; and
 
-    Do not forget to have your names, student numbers, and date visible and at the
-    top of all files you edit.
+    Do not forget to have your names, student numbers, and date visible and at
+    the top of all files you edit.
 
 ## Exercises
 
@@ -119,10 +118,13 @@ this function in [`test/Spec.hs`](test/Spec.hs).
 
 Using the function `foldE`, implement function `printE` in
 [`src/FormulaManipulator.hs`](src/FormulaManipulator.hs) that pretty-prints an
-expression. For all expression it must hold that if you parse the
-pretty-printed expression you get the original expression back. Stated in
-Haskell terms: for all expressions `e` in `Expr` it holds `e == ((\(Right x)
--> x) . parseExpr . printE) e`
+expression. For example, an expression constructed like `Mult (Const 5) (Plus
+(Var "x") (Const 3))` is pretty-printed as "5 * (x + 3)".
+
+For all expression it must hold that if you parse the pretty-printed
+expression you get the original expression back. Stated in Haskell terms: for
+all expressions `e` in `Expr` it holds `e == ((\(Right x) -> x) . parseExpr .
+printE) e`
 
 Properly document the function with
 [Haddock](https://www.haskell.org/haddock/); run `cabal haddock` to generate
@@ -225,11 +227,10 @@ main = do
         print (processCLIArgs as)
 ```
 
-This `main` function uses the IO monad, which you do not already (need to)
-know. In the `main` function the command-line arguments are read into the list
-`as` by the `getArgs` function. This list with command-line arguments is then
-processed by the function `processCLIArgs`. The output of
-`processCLIArgs` is printed to the console.
+This `main` function uses the IO monad. In the `main` function the
+command-line arguments are read into the list `as` by the `getArgs` function.
+This list with command-line arguments is then processed by the function
+`processCLIArgs`. The output of `processCLIArgs` is printed to the console.
 
 Implement this function `processCLIArgs :: [String] -> String` in
 [`src/FormulatorCLI.hs`](src/FormulatorCLI.hs). You are allowed, but not required, to use the
@@ -247,7 +248,7 @@ Compile and run your project as follows:
 
 ```bash
 cabal build
-cabal exec formulator -- OPTION EXPR
+cabal run formulator -- OPTION EXPR
 ```
 
 Where `EXPR` is an expression that can be parsed with
@@ -271,13 +272,13 @@ Your program should also give helpful error messages when things go wrong.
 For example:
 
 ```bash
-cabal exec formulator -- --evaluate "f=1;g=7" "3 + 5 * g * f"   
+cabal run formulator -- --evaluate "f=1;g=7" "3 + 5 * g * f"   
   => "38"
-cabal exec formulator -- -d "f" "3 + 5 * 5 * f * f"             
+cabal run formulator -- -d "f" "3 + 5 * 5 * f * f"             
   => "((25 * f) + (25 * f))"
-cabal exec formulator -- --simplify "3 + 1 * x + (x * 0) + 45"  
+cabal run formulator -- --simplify "3 + 1 * x + (x * 0) + 45"  
   => "((x + 3) + 45)"
-cabal exec formulator -- -p "3 + 1 * x + (x * 0) + 45"          
+cabal run formulator -- -p "3 + 1 * x + (x * 0) + 45"          
   => "(((3 + (1 * x)) + (x * 0)) + 45)"
 ```
 
