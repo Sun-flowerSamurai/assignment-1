@@ -6,4 +6,4 @@ import FormulatorCLI (processCLIArgs)
 main :: IO ()
 main = do
         as <- getArgs
-        print (processCLIArgs as)
+        putStrLn (processCLIArgs as)
