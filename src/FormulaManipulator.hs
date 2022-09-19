@@ -1,8 +1,8 @@
 {-|
 Module      : FormulaManipulator
 Description : Manipulate formulas and expressions represented by `Expr` values
-Copyright   : STUDENT NAME 1 (ID)
-              STUDENT NAME 2 (ID)
+Copyright   : Mat Verhoeven (1728342)
+              David Chen (1742477)
 
 `FormulaManipulator` offers functions to manipulate, evaluate, and print
 formulas and expressions represented by `Expr` values.
