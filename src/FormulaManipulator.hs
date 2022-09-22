@@ -72,15 +72,14 @@ myPrintE :: Expr String Integer -> String
 myPrintE = myFoldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
 
 
-evalE' :: (a -> Integer) -> Expr a Integer -> Integer
-evalE' d = myFoldE d id (+) (*) 
+myEvalE' :: (a -> Integer) -> Expr a Integer -> Integer
+myEvalE' d = myFoldE d id (+) (*) 
 
 -- Tot zover was ik tot nu toe gekomen, we moeten het officiel vrijdag voor 18:00 inleveren,
 -- maar ik denk dat we wellicht iets meer tijd nodig gaan hebben om alles netjes te krijgen.
 
 
 evalE     = error "Implement, document, and test this function"
-
 
 
 simplifyE = error "Implement, document, and test this function"
