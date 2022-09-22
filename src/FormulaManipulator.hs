@@ -79,8 +79,6 @@ myEvalE' d = myFoldE d id (+) (*)
 -- maar ik denk dat we wellicht iets meer tijd nodig gaan hebben om alles netjes te krijgen.
 
 
-bla bla bla 
-
 evalE     = error "Implement, document, and test this function"
 
 
