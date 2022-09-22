@@ -52,6 +52,33 @@ printE' = foldE' id id (\x y -> "(" ++ x ++ " + " ++ y ++ ")") (\x y -> x ++ " *
 printEx :: (Show x, Show y) => Expr x y -> String --werkt alleen met strings nog niet general types
 printEx = foldEx show show (\x y -> "(" ++ x ++ " + " ++ y ++ ")") (\x y -> x ++ " * " ++ y ) --overbodige haakjes zou kunnen atm
 
+
+myFoldE :: (a -> c)
+  -> (b -> c)
+  -> (c -> c -> c)
+  -> (c -> c -> c)
+  -> Expr a b
+  -> c
+myFoldE f g h k = rec
+                    where
+                    rec (Var v) = f v
+                    rec (Const c) = g c
+                    rec (Plus exr1 exr2) = h (rec exr1) (rec exr2) 
+                    rec (Mult exr1 exr2) = k (rec exr1) (rec exr2)
+
+
+
+myPrintE :: Expr String Integer -> String
+myPrintE = myFoldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
+
+
+evalE' :: (a -> Integer) -> Expr a Integer -> Integer
+evalE' d = myFoldE d id (+) (*) 
+
+
 evalE     = error "Implement, document, and test this function"
+
+
+
 simplifyE = error "Implement, document, and test this function"
 diffE     = error "Implement, document, and test this function"
