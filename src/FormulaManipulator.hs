@@ -52,6 +52,7 @@ printE' = foldE' id id (\x y -> "(" ++ x ++ " + " ++ y ++ ")") (\x y -> x ++ " *
 printEx :: (Show x, Show y) => Expr x y -> String --werkt alleen met strings nog niet general types
 printEx = foldEx show show (\x y -> "(" ++ x ++ " + " ++ y ++ ")") (\x y -> x ++ " * " ++ y ) --overbodige haakjes zou kunnen atm
 
+-- Hieronder heb ik mijn pogingen toegevoegd, nog geen documentatie en tests toegevoeg
 
 myFoldE :: (a -> c)
   -> (b -> c)
@@ -67,13 +68,15 @@ myFoldE f g h k = rec
                     rec (Mult exr1 exr2) = k (rec exr1) (rec exr2)
 
 
-
 myPrintE :: Expr String Integer -> String
 myPrintE = myFoldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
 
 
 evalE' :: (a -> Integer) -> Expr a Integer -> Integer
 evalE' d = myFoldE d id (+) (*) 
+
+-- Tot zover was ik tot nu toe gekomen, we moeten het officiel vrijdag voor 18:00 inleveren,
+-- maar ik denk dat we wellicht iets meer tijd nodig gaan hebben om alles netjes te krijgen.
 
 
 evalE     = error "Implement, document, and test this function"
