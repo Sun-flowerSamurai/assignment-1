@@ -13,10 +13,11 @@ module FormulaManipulator
   , evalE
   , simplifyE
   , diffE
-  )
+  , myAdd)
 where
 
 import           ExprLanguage                   ( Expr(Var, Const, Plus, Mult), parseExpr )
+import Data.Bifoldable (Bifoldable)
 
 -- foldE :: Expr a b -> Expr a b -> (Expr a b -> Expr a b -> Expr a b) -> (Expr a b -> Expr a b -> Expr a b) -> Expr a b -> Expr a b -- het idee is om foldE op elke constructor te laten werken! dus foldE.a.b.f.g werkt op een Expr type. Hier hoort a bij const, b bij var, f bij plus en g bij mult (bijvoorbeeld)
 -- foldE     = error "Implement, document, and test this function"
@@ -64,16 +65,16 @@ myFoldE f g h k = rec
                     where
                     rec (Var v) = f v
                     rec (Const c) = g c
-                    rec (Plus exr1 exr2) = h (rec exr1) (rec exr2) 
+                    rec (Plus exr1 exr2) = h (rec exr1) (rec exr2)
                     rec (Mult exr1 exr2) = k (rec exr1) (rec exr2)
 
 
-myPrintE :: Expr String Integer -> String
+myPrintE :: Show b => Expr String b -> String
 myPrintE = myFoldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
 
 
 myEvalE' :: (a -> Integer) -> Expr a Integer -> Integer
-myEvalE' d = myFoldE d id (+) (*) 
+myEvalE' d = myFoldE d id (+) (*)
 
 -- Tot zover was ik tot nu toe gekomen, we moeten het officiel vrijdag voor 18:00 inleveren,
 -- maar ik denk dat we wellicht iets meer tijd nodig gaan hebben om alles netjes te krijgen.
