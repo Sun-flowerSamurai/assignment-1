@@ -13,7 +13,7 @@ module FormulaManipulator
   , evalE
   , simplifyE
   , diffE
-  , myAdd)
+  )
 where
 
 import           ExprLanguage                   ( Expr(Var, Const, Plus, Mult), parseExpr )
@@ -75,6 +75,26 @@ myPrintE = myFoldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++
 
 myEvalE' :: (a -> Integer) -> Expr a Integer -> Integer
 myEvalE' d = myFoldE d id (+) (*)
+
+
+mySimplifyE :: (Num b, Eq b) => Expr a b -> Expr a b
+mySimplifyE = myFoldE Var Const addE multE 
+  where 
+    addE (Const c1) (Const c2) = Const (c1 + c2) 
+    addE (Const c) (Var v) = if c == 0 then Var v else Plus (Const c) (Var v)
+    addE (Var v) (Const c) = if c == 0 then Var v else Plus (Var v) (Const c)
+    addE e1 e2 = Plus e1 e2
+    multE (Const c1) (Const c2) = Const (c1 * c2) 
+    multE (Const c) (Var v)
+      | c == 0 = Const 0 
+      | c == 1 = Var v
+      | otherwise = Mult (Const c) (Var v)
+    multE (Var v) (Const c)
+      | c == 0 = Const 0 
+      | c == 1 = Var v
+      | otherwise = Mult (Const c) (Var v)
+    multE e1 e2 = Mult e1 e2
+
 
 -- Tot zover was ik tot nu toe gekomen, we moeten het officiel vrijdag voor 18:00 inleveren,
 -- maar ik denk dat we wellicht iets meer tijd nodig gaan hebben om alles netjes te krijgen.
