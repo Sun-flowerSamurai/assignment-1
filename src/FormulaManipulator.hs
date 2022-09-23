@@ -81,18 +81,19 @@ mySimplifyE :: (Num b, Eq b) => Expr a b -> Expr a b
 mySimplifyE = myFoldE Var Const addE multE 
   where 
     addE (Const c1) (Const c2) = Const (c1 + c2) 
-    addE (Const c) (Var v) = if c == 0 then Var v else Plus (Const c) (Var v)
-    addE (Var v) (Const c) = if c == 0 then Var v else Plus (Var v) (Const c)
+    addE (Const c) e = if c == 0 then e else Plus (Const c) e
+    addE e (Const c) = if c == 0 then e else Plus e (Const c)
     addE e1 e2 = Plus e1 e2
+    
     multE (Const c1) (Const c2) = Const (c1 * c2) 
-    multE (Const c) (Var v)
+    multE (Const c) e
       | c == 0 = Const 0 
-      | c == 1 = Var v
-      | otherwise = Mult (Const c) (Var v)
-    multE (Var v) (Const c)
+      | c == 1 = e
+      | otherwise = Mult (Const c) e
+    multE e (Const c)
       | c == 0 = Const 0 
-      | c == 1 = Var v
-      | otherwise = Mult (Const c) (Var v)
+      | c == 1 = e
+      | otherwise = Mult (Const c) e
     multE e1 e2 = Mult e1 e2
 
 
