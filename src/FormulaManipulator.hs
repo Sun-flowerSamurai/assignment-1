@@ -46,6 +46,7 @@ printE = foldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*"
 printE' :: Show b => Expr String b -- Expression to be pretty-printed
   -> String                        -- Pretty-printed expression
 -- ^Another take on pretty-printing, the solution is unfortunately very inefficient :(
+-- and it is still incorrect I just realised
 printE' = foldE id show (\ l r -> l ++ "+" ++ r) printMult
   where 
     printMult l r
