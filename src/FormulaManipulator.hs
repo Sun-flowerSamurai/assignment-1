@@ -36,7 +36,8 @@ foldE f g h k = rec
 
 
 printE :: Show b => Expr String b -> String
--- ^ Pretty-prints an expression, preserving the right order of operations
+-- ^Pretty-prints an expression, preserving the right order of operations
+--  by placing parentheses appropriately 
 printE = foldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
 
 
@@ -74,5 +75,4 @@ simplifyE = foldE Var Const addE multE
 
 
 -- Still need to implement diffE :(
-
 diffE     = error "Implement, document, and test this function"
