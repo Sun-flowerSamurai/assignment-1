@@ -83,4 +83,4 @@ simplifyE = foldE Var Const addE multE
 
 
 -- Still need to implement diffE :(
-diffE    = undefined
+diffE    = error "Implement, document, and test this function"
