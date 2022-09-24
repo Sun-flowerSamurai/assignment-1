@@ -45,19 +45,6 @@ printE :: Show b => Expr String b -- Expression to be pretty-printed
 -- by placing parentheses (very generously)
 printE = foldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
   
-  
-printE' :: Show b => Expr String b -- Expression to be pretty-printed
-  -> String                        -- Pretty-printed expression
--- ^Another take on pretty-printing, the solution is unfortunately very inefficient :(
--- and it is still incorrect I just realised
-printE' = foldE id show (\ l r -> l ++ "+" ++ r) printMult
-  where 
-    printMult l r
-      | '+' `elem` l && '+' `elem` r = "(" ++ l ++ ")*(" ++ r ++ ")"
-      | '+' `elem` l                 = "(" ++ l ++ ")*" ++ r
-      | '+' `elem` r                 = l ++ "*(" ++ r ++")"
-      | otherwise                    = l ++ "*" ++ r
-
 
 evalE :: (a -> Integer) -- dictionary containing the values
   -> Expr a Integer     -- expression to be evaluated
