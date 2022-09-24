@@ -26,8 +26,11 @@ foldE :: (a -> c)  -- Var
   -> (c -> c -> c) -- Mult
   -> Expr a b      -- Expression to be folded
   -> c             -- Result
--- ^Catamorphism factory for the Expr type.
--- the Expr type has a (binary) tree structure
+-- ^The foldE function acts as a catamorphism factory for the Expr type.
+-- The Expr type has a (binary) tree structure made up of four constructors, allowing for such a catamorphism. 
+-- foldE takes in four functions, two of which are f and g which act on a and b respectively for given Expr a b. 
+-- The other two are h and k, which act on the expressions inside of the Plus and Mult constructors, 
+-- somewhat analogous to a function acting on the successor contructor in a catamorphism on the natural numbers.
 foldE f g h k = rec
                     where
                     rec (Var v) = f v                              -- Var
