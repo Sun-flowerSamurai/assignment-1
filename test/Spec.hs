@@ -45,10 +45,9 @@ main = hspec $ do
       it "should convert Mult (Const 2) (Const 2) to \"2*2\"" $ do
         printE (Mult (Const 2) (Const 2)::Expr String Integer) 
         `shouldBe` ("2*2":: String)
-      --it "should return the same expression when applying parseExpr . printE" $ do -- want this to be a forall
-      --  (parseExpr . printE) (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))::Expr String Integer) 
-      --  `shouldBe` (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))) 
-        -- deze doet ie niet goet want parseExpr mapt naar een Either type
+      it "should return the same expression when applying parseExpr . printE" $ do -- want this to be a forall
+        (parseExpr . printE) (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))::Expr String Integer) 
+        `shouldBe` Right (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))) 
 
     -- -- testcases for evalE
     -- describe "evalE" $ do

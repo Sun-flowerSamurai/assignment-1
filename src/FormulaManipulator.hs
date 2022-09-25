@@ -42,7 +42,8 @@ foldE f g h k = rec
 printE :: Show b => Expr String b -- Expression to be pretty-printed
   -> String                       -- Pretty-printed expression
 -- ^Pretty-prints an expression, preserving the right order of operations
--- by placing parentheses (very generously)
+-- by placing parentheses (very generously) around the plus operator.
+-- parseExpr is a left inverse of this function.
 printE = foldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
   
 
