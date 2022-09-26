@@ -39,12 +39,12 @@ foldE f g h k = rec
                     rec (Mult exr1 exr2) = k (rec exr1) (rec exr2) -- Mult
 
 
-printE :: Show b => Expr String b -- Expression to be pretty-printed
+printE :: (Show a, Show b) => Expr a b -- Expression to be pretty-printed
   -> String                       -- Pretty-printed expression
 -- ^Pretty-prints an expression, preserving the right order of operations
 -- by placing parentheses (very generously) around the plus operator.
 -- parseExpr is a left inverse of this function.
-printE = foldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
+printE = foldE show show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
   
 
 evalE :: (a -> Integer) -- dictionary containing the values
