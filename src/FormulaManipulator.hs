@@ -79,7 +79,7 @@ simplifyE = foldE Var Const addE multE
     multE e (Const c)
       | c == 0                  = Const 0 
       | c == 1                  = e
-      | otherwise               = Mult (Const c) e
+      | otherwise               = Mult e (Const c) 
     multE e1 e2                 = Mult e1 e2
 
 
