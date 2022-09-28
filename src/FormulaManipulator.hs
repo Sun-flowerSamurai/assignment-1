@@ -18,6 +18,7 @@ where
 
 import           ExprLanguage                   ( Expr(Var, Const, Plus, Mult), parseExpr )
 import Data.Bifoldable (Bifoldable)
+import Control.Arrow (Arrow(first))
 
 
 foldE :: (a -> c)  -- Var 
@@ -84,4 +85,21 @@ simplifyE = foldE Var Const addE multE
 
 
 -- Still need to implement diffE :(
+
+-- tdiffE :: a -> (Expr a b, Expr a b ) -> (Expr a b, Expr a b) -- (f', f)
+tdiffE :: String -> (Expr String Int, Expr String Int) -> (Expr String Int, Expr String Int)
+tdiffE x (expr1, expr2) = foldE (tf (diffvar x, Var)) (tf (diffconst, Const)) (tf2 (diffplus, Plus)) (tf2 (diffmult, Mult)) (expr1, expr2)
+  where
+    tf (f,g) (a, b) = (f a, g b) -- Deze twee functies zorgen ervoor dat we goed tuples kunnen verwerken
+    tf2 (f, g) (a, b) (c, d) = (f a c, g b d)
+    diffvar x v = if v == x then (Const 1) else (Const 0) -- Zou miss beter kunnen
+    diffconst expr = 0 
+    diffplus expr1 expr2 = (Plus expr1 expr2) --doet nu niks--
+    diffmult expr1 expr2 = (Mult expr1 expr2) --same
+
+    -- werken allemaal niet 
+    -- diffplus expr1 expr2 = Plus (fst . tdiffE x expr1) (fst . tdiffE x expr2) 
+    -- diffmult expr1 expr2 = Plus (Mult (expr1) (fst . tdiffE x expr2)) (Mult (expr2) (fst . tdiffE x expr1)) 
+
+
 diffE    = error "Implement, document, and test this function"
