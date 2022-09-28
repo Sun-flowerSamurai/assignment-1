@@ -14,7 +14,7 @@ module FormulatorCLI
 where
 import           Data.Either
 import           Data.List.Split
-import           ExprLanguage                   ( Expr
+import           ExprLanguage                   ( Expr (..)
                                                 , parseExpr
                                                 , ParseError
                                                 )
@@ -24,4 +24,7 @@ import           FormulaManipulator             ( printE
                                                 , diffE
                                                 )
 
-processCLIArgs as = "Implement, document, and test this function"
+processCLIArgs :: [String] -> String
+processCLIArgs as = func (head as) (tail as)
+  where
+    func "-p" xs =  printE (fromRight (Var "error") (parseExpr (head xs)))
