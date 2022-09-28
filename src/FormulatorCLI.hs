@@ -28,3 +28,8 @@ processCLIArgs :: [String] -> String
 processCLIArgs as = func (head as) (tail as)
   where
     func "-p" xs =  printE (fromRight (Var "error") (parseExpr (head xs)))
+    func "-print" xs =  printE (fromRight (Var "error") (parseExpr (head xs)))
+    func "-s" xs = printE (simplifyE (fromRight (Var "error") (parseExpr (head xs))))
+    func "-simplify" xs = printE (simplifyE (fromRight (Var "error") (parseExpr (head xs))))
+--    func "-d" xs = printE (simplifyE (diffE (fromRight (Var "error") (parseExpr (head xs))))) --eruit gecomment omdat nog niet geimplement
+--    func "-differentiate" xs = printE (simplifyE (diffE (fromRight (Var "error") (parseExpr (head xs)))))
