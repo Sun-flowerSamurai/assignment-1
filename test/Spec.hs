@@ -59,10 +59,11 @@ main = hspec $ do
     --   it "should have tests" $ do
     --     (1 :: Integer) `shouldBe` (1 :: Integer)
 
-  --   -- testcases for diffE
-  --   describe "diffE" $ do
-  --     it "should have tests" $ do
-  --       (1 :: Integer) `shouldBe` (1 :: Integer)
+    -- testcases for diffE
+    describe "diffE" $ do
+      it "let f = x*x + 1 + x, then f'= 2*x + 1" $ do
+        (printE . simplifyE) (diffE "x" (Plus (Mult (Var "x") (Var "x")) (Plus (Const 1) (Var "x")):: Expr String Integer ))
+        `shouldBe` ("((x+x)+1)" :: String)
 
   -- -- testcases for ...
   -- describe "FormulatorCLI" $ do
