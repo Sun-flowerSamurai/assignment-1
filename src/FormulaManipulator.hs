@@ -102,5 +102,12 @@ simplifyE = foldE Var Const addE multE
     -- diffplus expr1 expr2 = Plus (fst . tdiffE x expr1) (fst . tdiffE x expr2) 
     -- diffmult expr1 expr2 = Plus (Mult (expr1) (fst . tdiffE x expr2)) (Mult (expr2) (fst . tdiffE x expr1)) 
 
+myDiffE :: (Eq a, Num b) => a -> Expr a b -> Expr a b
+myDiffE x = snd . foldE myVar myConst myAdd myMult
+      where
+        myVar                      = \v -> (Var v, if v == x then Const 1 else Const 0)
+        myConst                    = \c -> (Const c, Const 0)
+        myAdd (le, le') (re, re')  = (Plus le re, Plus le' re')
+        myMult (le, le') (re, re') = (Mult le re, Plus (Mult le' re) (Mult le re'))
 
 diffE    = error "Implement, document, and test this function"
