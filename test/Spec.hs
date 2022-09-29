@@ -1,3 +1,18 @@
+{-|
+Module      : FormulatorCLI
+Description : The command-line interface for the formulator program
+Copyright   : Mat Verhoeven (1728342)
+              David Chen (1742477)
+
+Testcases for:
+    foldE, 
+    printE, 
+    evalE, 
+    simplifyE, 
+    diffE, 
+    processCLIArgs.
+-}
+
 import           Test.Hspec
 import           Test.QuickCheck
 import           Control.Exception              ( evaluate )
@@ -49,15 +64,22 @@ main = hspec $ do
         (parseExpr . printE) (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))::Expr String Integer) 
         `shouldBe` Right (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))) 
 
-    -- -- testcases for evalE
-    -- describe "evalE" $ do
-    --   it "should have tests" $ do
-    --     (1 :: Integer) `shouldBe` (1 :: Integer)
+    -- testcases for evalE
+    describe "evalE" $ do
+      it "x+1 for x=4 should equal 5" $ do
+        evalE (\v -> if v == "x" then 4 else error "unknown variable") (Plus (Var "x") (Const 1) :: Expr String Integer) 
+        `shouldBe` (5 :: Integer)
+      it "1+1 should evaluate to 2" $ do
+        evalE (\v -> "There should be no variable") (Plus (Const 1) (Const 1) :: Expr String Integer) 
+        `shouldBe` (2 :: Integer)
+      it "5*5 should evaluate to 25" $ do
+        evalE (\v -> "There should be no variable") (Mult (Const 5) (Const 5) :: Expr String Integer) 
+        `shouldBe` (25 :: Integer)
 
-    -- -- testcases for simplifyE
-    -- describe "simplifyE" $ do
-    --   it "should have tests" $ do
-    --     (1 :: Integer) `shouldBe` (1 :: Integer)
+    -- testcases for simplifyE
+    describe "simplifyE" $ do
+      it "should have tests" $ do
+        (1 :: Integer) `shouldBe` (1 :: Integer)
 
     -- testcases for diffE
     describe "diffE" $ do
@@ -65,9 +87,9 @@ main = hspec $ do
         (printE . simplifyE) (diffE "x" (Plus (Mult (Var "x") (Var "x")) (Plus (Const 1) (Var "x")):: Expr String Integer ))
         `shouldBe` ("((x+x)+1)" :: String)
 
-  -- -- testcases for ...
-  -- describe "FormulatorCLI" $ do
-  --   describe "processCLIArgs" $ do
-  --     it "should have tests" $ do
-  --       (1 :: Integer) `shouldBe` (1 :: Integer)
+  -- testcases for ...
+  describe "FormulatorCLI" $ do
+    describe "processCLIArgs" $ do
+      it "should have tests" $ do
+        (1 :: Integer) `shouldBe` (1 :: Integer)
 
