@@ -46,16 +46,19 @@ processCLIArgs (arg:args)
 
 help :: [Char]
 help = "This is our Command Line Formula manipulator! \n\
-      \ This programs works with simple expressions containing: \n\
-      \ variables and constants and support addition (+) and \n\
-      \ multiplication (*). \n\
-      \ This program can print expressions using -p or --print \n\
-      \ It can simplify expressions using -s or --simplify \n\
-      \ It can evaluate expression using -e or --evaluate \n\
-      \ To evaluate an expression you must provide an additional \n\
-      \ argument. Namely the replacement values. These must be formatted \n\
-      \ as <var>=<value>, evaluate expression with multiple variables \n\
-      \ multiple replacement values need to be provided, these need \n\
-      \ to be separated by the ';' character. \n\
-      \ The program can also differentiate expressions in a given variable \n\
-      \ this variable must be provided as an argument"
+      \  This programs works with simple expressions containing: \n\
+      \  variables and constants and support addition (+) and \n\
+      \  multiplication (*). \n\
+      \  to call a particular function use the following format \n\
+      \  specify the function, then provide its arguments \n\
+      \  and lastly provide the expression you want to operate on \n\
+      \  This program can print expressions using -p or --print \n\
+      \  It can simplify expressions using -s or --simplify \n\
+      \  It can evaluate expression using -e or --evaluate \n\
+      \  To evaluate an expression you must provide an additional \n\
+      \  argument. Namely the replacement values. These must be formatted \n\
+      \  as <var>=<value>, evaluate expression with multiple variables \n\
+      \  multiple replacement values need to be provided, these need \n\
+      \  to be separated by the ';' character. \n\
+      \  The program can also differentiate expressions in a given variable \n\
+      \  this variable must be provided as an argument"
