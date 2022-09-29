@@ -105,8 +105,8 @@ simplifyE = foldE Var Const addE multE
 myDiffE :: (Eq a, Num b) => a -> Expr a b -> Expr a b
 myDiffE x = snd . foldE myVar myConst myAdd myMult
       where
-        myVar                      = \v -> (Var v, if v == x then Const 1 else Const 0)
-        myConst                    = \c -> (Const c, Const 0)
+        myVar v                    = (Var v, if v == x then Const 1 else Const 0)
+        myConst c                  = (Const c, Const 0)
         myAdd (le, le') (re, re')  = (Plus le re, Plus le' re')
         myMult (le, le') (re, re') = (Mult le re, Plus (Mult le' re) (Mult le re'))
 
