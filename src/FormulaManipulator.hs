@@ -45,7 +45,7 @@ printE :: (Show b) => Expr String b -- Expression to be pretty-printed
 -- ^Pretty-prints an expression, preserving the right order of operations
 -- by placing parentheses (very generously) around the plus operator.
 -- parseExpr is a left inverse of this function.
-printE = foldE id show (\ l r -> "(" ++ l ++ "+" ++ r ++ ")") (\ l r -> l ++ "*" ++ r)
+printE = foldE id show (\ l r -> "(" ++ l ++ " + " ++ r ++ ")") (\ l r -> l ++ " * " ++ r)
   
 
 evalE :: (a -> Integer) -- dictionary containing the values

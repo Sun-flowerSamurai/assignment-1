@@ -28,7 +28,7 @@ import           FormulaManipulator             ( printE
 processCLIArgs :: [String] -> String
 processCLIArgs (arg:args)
     | arg == "-p" || arg == "--print"         = print args
-    | arg == "-s" || arg == "-simplify"       = simplify args
+    | arg == "-s" || arg == "--simplify"       = simplify args
     | arg == "-e" || arg == "--evaluate"      = eval args
     | arg == "-d" || arg == "--differentiate" = diff args
     | arg == "-h" || arg == "--help"          = help
