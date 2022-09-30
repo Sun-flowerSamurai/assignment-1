@@ -1,7 +1,7 @@
 {-|
 Module      : FormulatorCLI
 Description : The command-line interface for the formulator program
-Copyright   : Mat Verhoeven (1728342)
+Copyright   : Matt Verhoeven (1728342)
               David Chen (1742477)
 
 The command-line interface for the formulator program. Parses and processes
@@ -25,32 +25,32 @@ import           FormulaManipulator             ( printE
                                                 )
 
 
-processCLIArgs :: [String] -> String
-processCLIArgs [] = "Please input command or type \"-h\" for help"
+processCLIArgs :: [String] -> String -- Input as a list of strings to output, which is a single string
+processCLIArgs [] = "Please input command or type \"-h\" for help" -- nothing inputted
 processCLIArgs (arg:args)
-    | arg == "-p" || arg == "--print"         = printer args
-    | arg == "-s" || arg == "--simplify"      = simplify args
-    | arg == "-e" || arg == "--evaluate"      = eval args
-    | arg == "-d" || arg == "--differentiate" = diff args
-    | arg == "-h" || arg == "--help"          = help
-    | otherwise = errormsg
+    | arg == "-p" || arg == "--print"         = printer args --prints expression
+    | arg == "-s" || arg == "--simplify"      = simplify args --simplifies and prints expression
+    | arg == "-e" || arg == "--evaluate"      = eval args --evaluates expression with every variable being mapped to a value
+    | arg == "-d" || arg == "--differentiate" = diff args -- differentiates, simplifies and then prints expression
+    | arg == "-h" || arg == "--help"          = help --shows help message
+    | otherwise = errormsg --no valid command, shows how to access help message
       where
-        printer [] = "No expression to print."        
+        printer [] = "No expression to print."                           --No expression
         printer arg    = printE (parse (head arg))
-        simplify [] = "No expression to simplify"
+        simplify [] = "No expression to simplify"                        --No expression
         simplify arg = (printE . simplifyE) (parse (head arg))
-        eval [] = "No expression to evaluate, no variable-to-value dictionary"
-        eval (x:[]) = "No expression to evaluate"
+        eval [] = "No expression to evaluate, no variable-to-value dictionary" --No expression, variable map
+        eval (x:[]) = "No expression to evaluate"                        --No expression
         eval (x:xs)  = show (evalE (dict x) (parse (last xs)))
           where
-            dict xs z =  rec (map (endBy "=") (endBy ";" xs))
+            dict xs z =  rec (map (endBy "=") (endBy ";" xs))            --Enforces the mapping format
               where 
                 rec []       = error "Variable not in lookup table."
-                rec (xs:xss) = if z == head xs then read (last xs) else rec xss
-        diff [] = "No expression to derivate, no variable to take the derivative to"
-        diff (x:[]) = "No expression to derivate"
+                rec (xs:xss) = if z == head xs then read (last xs) else rec xss --This gives an error msg right now, Prelude.read: no parse if dict is bad
+        diff [] = "No expression to derivate, no variable to take the derivative to" --No expression, variable given
+        diff (x:[]) = "No expression to derivate"                        --No expression
         diff (x:xs)  = printE (simplifyE (diffE x (parse (last xs))))
-        parse xs     = fromRight (Var "Error, couldn't parse expression.") (parseExpr xs)
+        parse xs     = fromRight (Var "Error, couldn't parse expression.") (parseExpr xs) --If parseExpr fails, it shows the error, otherwise it continues with the result
 
 help :: [Char]
 help = "This is our Command Line Formula manipulator! \n\

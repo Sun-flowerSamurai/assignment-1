@@ -50,16 +50,16 @@ main = hspec $ do
     describe "printE" $ do
       it "should convert Mult (Plus (Const 1) (Var \"x\")) (Plus (Const 1) (Var \"x\")) to \"(1+x)*(1+x)\"" $ do
         printE (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))::Expr String Integer) 
-        `shouldBe` ("(1+x)*(1+x)":: String)
+        `shouldBe` ("(1 + x) * (1 + x)":: String)
       it "should convert Const 0 to \"0\"" $ do
         printE (Const 0::Expr String Integer) 
         `shouldBe` ("0":: String)
-      it "should convert Plus (Const 2) (Const 2) to \"(2+2)\"" $ do
+      it "should convert Plus (Const 2) (Const 2) to \"(2 + 2)\"" $ do
         printE (Plus (Const 2) (Const 2)::Expr String Integer) 
-        `shouldBe` ("(2+2)":: String)
-      it "should convert Mult (Const 2) (Const 2) to \"2*2\"" $ do
+        `shouldBe` ("(2 + 2)":: String)
+      it "should convert Mult (Const 2) (Const 2) to \"2 * 2\"" $ do
         printE (Mult (Const 2) (Const 2)::Expr String Integer) 
-        `shouldBe` ("2*2":: String)
+        `shouldBe` ("2 * 2":: String)
       it "should return the same expression when applying parseExpr . printE" $ do -- want this to be a forall
         (parseExpr . printE) (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))::Expr String Integer) 
         `shouldBe` Right (Mult (Plus (Const 1) (Var "x")) (Plus (Const 1) (Var "x"))) 
@@ -70,10 +70,10 @@ main = hspec $ do
         evalE (\v -> if v == "x" then 4 else error "unknown variable") (Plus (Var "x") (Const 1) :: Expr String Integer) 
         `shouldBe` (5 :: Integer)
       it "1+1 should evaluate to 2" $ do
-        evalE (\v -> "There should be no variable") (Plus (Const 1) (Const 1) :: Expr String Integer) 
+        evalE (\v -> error "There should be no variable") (Plus (Const 1) (Const 1) :: Expr String Integer) 
         `shouldBe` (2 :: Integer)
       it "5*5 should evaluate to 25" $ do
-        evalE (\v -> "There should be no variable") (Mult (Const 5) (Const 5) :: Expr String Integer) 
+        evalE (\v -> error "There should be no variable") (Mult (Const 5) (Const 5) :: Expr String Integer) 
         `shouldBe` (25 :: Integer)
 
     -- testcases for simplifyE
@@ -85,7 +85,7 @@ main = hspec $ do
     describe "diffE" $ do
       it "let f = x*x + 1 + x, then f'= 2*x + 1" $ do
         (printE . simplifyE) (diffE "x" (Plus (Mult (Var "x") (Var "x")) (Plus (Const 1) (Var "x")):: Expr String Integer ))
-        `shouldBe` ("((x+x)+1)" :: String)
+        `shouldBe` ("((x + x) + 1)" :: String)
 
   -- testcases for ...
   describe "FormulatorCLI" $ do
