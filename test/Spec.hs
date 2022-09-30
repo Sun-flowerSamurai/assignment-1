@@ -134,8 +134,25 @@ main = hspec $ do
 
     -- testcases for diffE
     describe "diffE" $ do
+      it "should differentiate x to 1" $ do
+        (diffE "x" (Var "x") :: Expr String Integer) 
+        `shouldBe` (Const 1)   
+      it "should differentiate a constant to 0" $ property $
+        forAll naturals (\n -> diffE "x" (Const n) == (Const 0))
+      it "should differentiate z to 0 w.r.t. x" $ do
+        (diffE "x" (Var "z") :: Expr String Integer) 
+        `shouldBe` (Const 0)    
+      it "should differentiate z*x to z w.r.t. x" $ do
+        ((simplifyE . (diffE "x")) (Mult (Var "z") (Var "x")) :: Expr String Integer) 
+        `shouldBe` (Var "z")                
+      it "should differentiate 3*x + 2*x to 5 w.r.t. x" $ do
+        ((simplifyE . (diffE "x") . fromRight (Mult (Var "Error") (Var "x")). parseExpr) "3*x + 2*x" :: Expr String Integer) 
+        `shouldBe` (Const 5)      
+      it "should differentiate (3*x) * (2*x) to 3*x*2 + 3*x*2 w.r.t. x" $ do
+        ((simplifyE . (diffE "x") . fromRight (Mult (Var "Error") (Var "x")). parseExpr) "(3*x) * (2*x)" :: Expr String Integer) 
+        `shouldBe` Plus (Mult (Const 3) (Mult (Const 2) (Var "x"))) (Mult (Mult (Const 3) (Var "x")) (Const 2))            
       it "let f = x*x + 1 + x, then f'= 2*x + 1" $ do
-        (printE . simplifyE) (diffE "x" (Plus (Mult (Var "x") (Var "x")) (Plus (Const 1) (Var "x")):: Expr String Integer ))
+        (printE . simplifyE) (diffE "x" (Plus (Mult (Var "x") (Var "x")) (Plus (Const 1) (Var "x")) :: Expr String Integer ))
         `shouldBe` ("((x + x) + 1)" :: String)
 
   -- testcases for ...
