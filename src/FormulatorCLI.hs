@@ -26,23 +26,31 @@ import           FormulaManipulator             ( printE
 
 
 processCLIArgs :: [String] -> String
+processCLIArgs [] = "Please input command or type \"-h\" for help"
 processCLIArgs (arg:args)
-    | arg == "-p" || arg == "--print"         = print args
+    | arg == "-p" || arg == "--print"         = printer args
     | arg == "-s" || arg == "--simplify"      = simplify args
     | arg == "-e" || arg == "--evaluate"      = eval args
     | arg == "-d" || arg == "--differentiate" = diff args
     | arg == "-h" || arg == "--help"          = help
+    | otherwise = errormsg
       where
-        print arg    = printE (parse (head arg))
+        printer [] = "No expression to print."        
+        printer arg    = printE (parse (head arg))
+        simplify [] = "No expression to simplify"
         simplify arg = (printE . simplifyE) (parse (head arg))
+        eval [] = "No expression to evaluate, no variable-to-value dictionary"
+        eval (x:[]) = "No expression to evaluate"
         eval (x:xs)  = show (evalE (dict x) (parse (last xs)))
           where
             dict xs z =  rec (map (endBy "=") (endBy ";" xs))
               where 
-                rec []       = error "Variable not in lookup table"
+                rec []       = error "Variable not in lookup table."
                 rec (xs:xss) = if z == head xs then read (last xs) else rec xss
+        diff [] = "No expression to derivate, no variable to take the derivative to"
+        diff (x:[]) = "No expression to derivate"
         diff (x:xs)  = printE (simplifyE (diffE x (parse (last xs))))
-        parse xs     = fromRight (Var "error") (parseExpr xs)
+        parse xs     = fromRight (Var "Error, couldn't parse expression.") (parseExpr xs)
 
 help :: [Char]
 help = "This is our Command Line Formula manipulator! \n\
@@ -62,3 +70,6 @@ help = "This is our Command Line Formula manipulator! \n\
       \  to be separated by the ';' character. \n\
       \  The program can also differentiate expressions in a given variable \n\
       \  this variable must be provided as an argument"
+
+errormsg :: String
+errormsg = "Command not recognized, type \"-h\" for a help message."
