@@ -24,6 +24,7 @@ import           FormulaManipulator             ( foldE
                                                 , diffE
                                                 )
 import           FormulatorCLI                  ( processCLIArgs )
+import           Data.Either
 
 main :: IO ()
 main = hspec $ do
@@ -78,8 +79,46 @@ main = hspec $ do
 
     -- testcases for simplifyE
     describe "simplifyE" $ do
-      it "should have tests" $ do
-        (1 :: Integer) `shouldBe` (1 :: Integer)
+      it "should evaluate 3*2 to 6" $ do
+        (simplifyE (Mult (Const 3) (Const 2)) :: Expr String Int) 
+        `shouldBe` (Const 6)
+      it "should evaluate 3+2 to 5" $ do
+        (simplifyE (Plus (Const 3) (Const 2)) :: Expr String Int) 
+        `shouldBe` (Const 5)
+      it "should evaluate x+0 to x" $ do
+        (simplifyE (Plus (Var "x") (Const 0)) :: Expr String Int) 
+        `shouldBe` (Var "x")
+      it "should evaluate 0+x to x" $ do
+        (simplifyE (Plus (Const 0) (Var "x")) :: Expr String Int) 
+        `shouldBe` (Var "x")
+      it "should evaluate x*0 to 0" $ do
+        (simplifyE (Mult (Var "x") (Const 0) ) :: Expr String Int) 
+        `shouldBe` (Const 0)
+      it "should evaluate 0*x to 0" $ do
+        (simplifyE (Mult (Const 0) (Var "x")) :: Expr String Int) 
+        `shouldBe` (Const 0)
+      it "should evaluate x*1 to x" $ do
+        (simplifyE (Mult (Var "x") (Const 1)) :: Expr String Int) 
+        `shouldBe` (Var "x")
+      it "should evaluate 1*x to x" $ do
+        (simplifyE (Mult (Const 1) (Var "x")) :: Expr String Int) 
+        `shouldBe` (Var "x")
+      it "should evaluate x+2 to x+2" $ do
+        (simplifyE (Plus (Var "x") (Const 2)) :: Expr String Int) 
+        `shouldBe` (Plus (Var "x") (Const 2))
+      it "should evaluate x*0+x*2+0 to x*2" $ do
+        ((simplifyE . fromRight (Var "error") . parseExpr) "x*0+x*2+0":: Expr String Integer) 
+        `shouldBe` (Mult (Var "x") (Const 2))
+      it "should evaluate (x*y)*0 to 0" $ do
+        ((simplifyE . fromRight (Var "error") . parseExpr) "(x*y)*0":: Expr String Integer) 
+        `shouldBe` (Const 0)              
+      it "should evaluate x*(y*0) to 0" $ do
+        ((simplifyE . fromRight (Var "error") . parseExpr) "x*(y*0)":: Expr String Integer) 
+        `shouldBe` (Const 0)             
+--      it "(forall n : n in N : (r2i . i2r) n >= 1)" $ property $
+--        forAll naturals (\n -> (r2i . i2r) n >= (1::Int))
+      
+
 
     -- testcases for diffE
     describe "diffE" $ do
