@@ -25,7 +25,8 @@ import           FormulaManipulator             ( foldE
                                                 )
 import           FormulatorCLI                  ( processCLIArgs )
 import           Data.Either
-
+naturals :: Gen Integer
+naturals = choose (1, 10000)
 main :: IO ()
 main = hspec $ do
   describe "FormulaManipulator" $ do
@@ -76,6 +77,17 @@ main = hspec $ do
       it "5*5 should evaluate to 25" $ do
         evalE (\v -> error "There should be no variable") (Mult (Const 5) (Const 5) :: Expr String Integer) 
         `shouldBe` (25 :: Integer)
+      it "should give an error when finding a variable not mapped to a value" $ do
+        evaluate(evalE (\v -> if v == "x" then 4 else error "unknown variable") (Plus (Var "y") (Const 1) :: Expr String Integer)) 
+        `shouldThrow` anyErrorCall      
+      it "should evaluate x+x*y+1 for x = 1, y = 2 to 4" $ do
+        evalE (\v -> if v == "x" then 1 else if v == "y" then 2 else error "unknown variable") (Plus (Var "x") (Plus (Mult (Var "x") (Var "y")) (Const 1)) :: Expr String Integer) 
+        `shouldBe` (4 :: Integer)
+      it "(forall n : n in N : it should evaluate x+3 with x = n to n + 3" $ property $
+        forAll naturals (\n -> evalE (\v -> if v == "x" then n else error "unknown variable") (Plus (Var "x") (Const 3)) == n + 3)
+      it "(forall n : n in N : it should evaluate x+x with x = n to 2*n" $ property $
+        forAll naturals (\n -> evalE (\v -> if v == "x" then n else error "unknown variable") (Plus (Var "x") (Var "x")) == 2*n)
+
 
     -- testcases for simplifyE
     describe "simplifyE" $ do

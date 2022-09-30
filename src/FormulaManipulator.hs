@@ -48,9 +48,9 @@ printE :: (Show b) => Expr String b -- Expression to be pretty-printed
 printE = foldE id show (\ l r -> "(" ++ l ++ " + " ++ r ++ ")") (\ l r -> l ++ " * " ++ r)
   
 
-evalE :: (Num b) => (a -> b) -- dictionary containing the values
-  -> Expr a b     -- expression to be evaluated
-  -> b            -- final result
+evalE :: (a -> Integer) -- dictionary containing the values
+  -> Expr a Integer     -- expression to be evaluated
+  -> Integer            -- final result
 -- ^Evaluates an expression where (some) variables are replaced 
 -- by other expressions (which in this case have to be constants)
 evalE d = foldE d id (+) (*)
