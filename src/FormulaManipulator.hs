@@ -52,7 +52,9 @@ evalE :: (a -> Integer) -- dictionary containing the values
   -> Expr a Integer     -- expression to be evaluated
   -> Integer            -- final result
 -- ^Evaluates an expression where (some) variables are replaced 
--- by other expressions (which in this case have to be constants)
+-- by other expressions (which in this case have to be constants). 
+-- You can map a variable to a function with a lambda function, such as
+-- (\v -> if v == "x" then 4 else error "No variables").
 evalE d = foldE d id (+) (*)
 
 

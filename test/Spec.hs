@@ -27,6 +27,34 @@ import           FormulatorCLI                  ( processCLIArgs )
 import           Data.Either
 naturals :: Gen Integer
 naturals = choose (1, 10000)
+
+helpmsg = "This is our Command Line Formula manipulator! \n\
+      \  This program works with simple expressions containing \n\
+      \  variables and constants, and support addition (+) and \n\
+      \  multiplication (*). \n\
+      \  To call a particular function use the following format: \n\
+      \  specify the function, provide its arguments \n\
+      \  and lastly provide the expression you want to operate on. \n\
+      \  Example: \"-p \"(x+2)\" \" \n\
+      \ \n\
+      \  This program has several commands:\n\
+      \  -- It can print expressions using -p or --print \n\
+      \  -- It can simplify expressions using -s or --simplify \n\
+      \  -- It can evaluate expressions using -e or --evaluate \n\
+      \  -- It can differentiate expressions using -d or --differentiate\n\
+      \  -- It can show this help message with -h or --help \n\
+      \ \n\
+      \  To evaluate an expression you must provide an additional \n\
+      \  argument. Namely the replacement values. These must be formatted \n\
+      \  as <var>=<value>, evaluate expression with multiple variables \n\
+      \  multiple replacement values need to be provided, these need \n\
+      \  to be separated by the ';' character. \n\
+      \  Example: \"-e \"x=2;\" \"(x+2)\" \" returns 4.\n\
+      \ \n\
+      \  The program can also differentiate expressions in a given variable, \n\
+      \  this variable must be provided as an argument. \n\
+      \  Example: \"-d \"x\" \"(x+2)\"\" returns 1."
+
 main :: IO ()
 main = hspec $ do
   describe "FormulaManipulator" $ do
@@ -158,6 +186,42 @@ main = hspec $ do
   -- testcases for ...
   describe "FormulatorCLI" $ do
     describe "processCLIArgs" $ do
-      it "should have tests" $ do
-        (1 :: Integer) `shouldBe` (1 :: Integer)
+      it "should apply the print command when called with \"-p\"" $ do
+        processCLIArgs ["-p", "(x+2)"] `shouldBe` "(x + 2)"
+      it "should apply the print command when called with \"--print\"" $ do
+        processCLIArgs ["--print", "(x+2)"] `shouldBe` "(x + 2)"        
+      it "should apply the simplify command when called with \"-s\"" $ do
+        processCLIArgs ["-s", "(x+2*5)"] `shouldBe` "(x + 10)"        
+      it "should apply the simplify command when called with \"--simplify\"" $ do
+        processCLIArgs ["--simplify", "(x+2*5)"] `shouldBe` "(x + 10)"  
+      it "should apply the differentiate command when called with \"-d\"" $ do
+        processCLIArgs ["-d", "x", "(x+2*5)"] `shouldBe` "1"  
+      it "should apply the differentiate command when called with \"--differentiate\"" $ do
+        processCLIArgs ["--differentiate", "x", "(x+2*5)"] `shouldBe` "1"  
+      it "should apply the evaluate command when called with \"-e\"" $ do
+        processCLIArgs ["-e","x=2;", "(x+2*5)"] `shouldBe` "12"  
+      it "should apply the evaluate command when called with \"--evaluate\"" $ do
+        processCLIArgs ["--evaluate","x=2;", "(x+2*5)"] `shouldBe` "12"
+      it "should give a help message when called with \"-h\"" $ do
+        processCLIArgs ["-h"] `shouldBe` helpmsg
+      it "should give a help message when called with \"--help\"" $ do
+        processCLIArgs ["--help"] `shouldBe` helpmsg      
+      it "should give an error message when called with nothing" $ do
+        processCLIArgs [] `shouldBe` "Please input command or type \"-h\" for help"
+      it "should give an error message when an invalid command is given" $ do
+        processCLIArgs ["-a"] `shouldBe` "Command not recognized, type \"-h\" for a help message."   
+      it "should give an error message when print is called with nothing" $ do
+        processCLIArgs ["-p"] `shouldBe` "No expression to print."
+      it "should give an error message when simplify is called with nothing" $ do
+        processCLIArgs ["-s"] `shouldBe` "No expression to simplify."
+      it "should give an error message when evaluate is called with nothing" $ do
+        processCLIArgs ["-e"] `shouldBe` "No expression to evaluate, no variable-to-value dictionary."    
+      it "should give an error message when evaluate is called with not enough arguments" $ do
+        processCLIArgs ["-e", "x=2;"] `shouldBe` "No expression to evaluate."     
+      it "should give an error message when evaluate is called with not variables being mapped" $ do
+        evaluate (processCLIArgs ["-e", "x=2;", "x+y"]) `shouldThrow` anyErrorCall  
+      it "should give an error message when differentiate is called with nothing" $ do
+        processCLIArgs ["-d"] `shouldBe` "No expression to derivate, no variable to take the derivative to."
+      it "should give an error message when differentiate is called with nothing" $ do
+        processCLIArgs ["-d", "x"] `shouldBe` "No expression to derivate."
 
